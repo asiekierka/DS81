@@ -53,7 +53,9 @@
 static const char *main_menu[]=
 	{
 	    "Reset ZX81",
+#ifdef DS81_USE_TAPES
 	    "Select Tape",
+#endif
 	    "Configure",
 	    "Map Joypad to Keys",
 	    "Machine Code Monitor",
@@ -70,7 +72,9 @@ static const char *main_menu[]=
 typedef enum
 {
     MenuReset,
+#ifdef DS81_USE_TAPES
     MenuSelectTape,
+#endif
     MenuConfigure,
     MenuMapJoypad,
     MenuMonitor,
@@ -193,11 +197,13 @@ static void Splash(void)
 	FB_Centre("supported FAT device.",y,COL_WHITE,COL_TRANSPARENT);
 	y += 8;
 
+#ifdef DS81_USE_TAPES
 	FB_Centre("Only the internal tape",y,COL_WHITE,COL_TRANSPARENT);
 	y += 8;
 
 	FB_Centre("files can be used.",y,COL_WHITE,COL_TRANSPARENT);
 	y += 8;
+#endif
     }
 
     while(!(keysDown() & KEY_A))
@@ -421,9 +427,11 @@ int main(int argc, char *argv[])
 				ZX81Reset(z80);
 				break;
 
+#ifdef DS81_USE_TAPES
 			    case MenuSelectTape:
 			    	SelectTape();
 				break;
+#endif
 
 			    case MenuConfigure:
 				GUI_Config();
