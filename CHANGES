@@ -12,7 +12,6 @@ Changes from V1.0 to V1.1
 
 
 Changes from V1.1 to V1.1a (uncontrolled release).
-
     +	Fixed hideous mess up that was the keyboard fix.
 
 Changes from V1.1a to V1.2
@@ -53,3 +52,11 @@ Changes from V1.2a to V1.3
     +	Increased maximum number of files to 1024 in selector.
     *	Forty Niner still goes mental, so there's still an emulation bug
     	somewhere.
+
+Changes from V1.3 to V1.3a
+
+    +   Built with BlocksDS for improved stability and native DSi support.
+    +   Added argv support for snapshot files.
+    *   Replaced the ZX81 ROM with the GPL-licensed Open81 ROM. It is
+        the same file, but under a different license.
+    -   Removed the built-in tapes for now.

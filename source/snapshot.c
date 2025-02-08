@@ -151,11 +151,14 @@ void SNAP_Load(Z80 *cpu, const char *optional_name, SnapshotType type)
 
     if (optional_name)
     {
-	strcpy(file, DEFAULT_SNAPDIR);
-    	strcat(file, optional_name);
-    	strcat(file, extension[type]);
+	if (optional_name[0] != '/')
+	{
+	    strcpy(file, DEFAULT_SNAPDIR);
+    	    strcat(file, optional_name);
+    	    strcat(file, extension[type]);
 
-	fp = fopen(file, "rb");
+	    fp = fopen(file, "rb");
+	}
 
 	if (!fp)
 	{

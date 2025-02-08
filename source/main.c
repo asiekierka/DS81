@@ -392,7 +392,11 @@ int main(int argc, char *argv[])
 
     SK_SetSticky(SK_SHIFT,DS81_Config[DS81_STICKY_SHIFT]);
 
-    if (DS81_Config[DS81_LOAD_DEFAULT_SNAPSHOT])
+    if (argc > 1 && argv[1] && argv[1][0])
+    {
+	SNAP_Load(z80, argv[1], SNAP_TYPE_FULL);
+    }
+    else if (DS81_Config[DS81_LOAD_DEFAULT_SNAPSHOT])
     {
     	SNAP_Load(z80, "AUTO", SNAP_TYPE_FULL);
     }
