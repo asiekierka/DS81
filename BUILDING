@@ -1,0 +1,18 @@
+Build Instructions
+------------------
+
+As this uses the example makefiles from devkitpro, all that is required is
+a 'make' command in the top level directory:
+
+$ make
+
+
+By default FAT support will be initialised.  To prevent this you need to supply
+additional flag settings:
+
+$ make ADDITIONAL_CFLAGS="-DDS81_DISABLE_FAT"
+
+
+There is a script mkrelease.sh which simply makes a FAT and non-FAT version of
+DS81 for release.  This script also sets the displayed version number to the
+string contained in the 'version' file (by default a time-stamp is produced).

@@ -1,0 +1,257 @@
+/*
+
+    z80 - Z80 emulation
+
+    Copyright (C) 2006  Ian Cowburn <ianc@noddybox.co.uk>
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+    -------------------------------------------------------------------------
+
+    $Id: z80.h,v 1.2 2008-11-03 17:07:31 ianc Exp $
+
+*/
+
+#ifndef Z80_H
+#define Z80_H "$Id: z80.h,v 1.2 2008-11-03 17:07:31 ianc Exp $"
+
+#include <stdio.h>
+
+/* Configuration
+*/
+#include "z80_config.h"
+
+
+/* ---------------------------------------- TYPES
+*/
+
+/* Large unsigned type
+*/
+typedef unsigned long Z80Val;
+
+
+/* 8-bit type.  The emulation will exit with code 2 if this isn't 8 bits.
+*/
+typedef unsigned char Z80Byte;
+
+
+/* 8-bit signed type.  The emulation will exit with code 2 if this isn't 8 bits.
+*/
+typedef signed char Z80Relative;
+
+
+/* 16-bit type.  The emulation will exit with code 2 if this isn't 16 bits.
+*/
+typedef unsigned short Z80Word;
+
+
+/* A Z80 16-bit register.  To access the HI/LO component use the indexes
+   Z80_HI_WORD and Z80_LO_WORD which will be initialised once Z80Init has been
+   called.
+*/
+typedef union
+{
+    Z80Word		w;
+    Z80Byte		b[2];
+} Z80Reg;
+
+extern int Z80_HI_WORD;
+extern int Z80_LO_WORD;
+
+
+/* The processor
+*/
+struct Z80Private;
+
+typedef struct
+{
+    Z80Word		PC;
+
+    Z80Reg		AF;
+    Z80Reg		BC;
+    Z80Reg		DE;
+    Z80Reg		HL;
+
+    Z80Word		AF_;
+    Z80Word		BC_;
+    Z80Word		DE_;
+    Z80Word		HL_;
+
+    Z80Reg		IX;
+    Z80Reg		IY;
+
+    Z80Word		SP;
+
+    Z80Byte		IFF1;
+    Z80Byte		IFF2;
+    Z80Byte		IM;
+    Z80Byte		I;
+    Z80Byte		R;
+
+    struct Z80Private	*priv;
+} Z80;
+
+
+/* Interfaces used to handle memory
+*/
+typedef	Z80Byte	(*Z80ReadMemory)(Z80 *cpu, Z80Word address);
+typedef	void	(*Z80WriteMemory)(Z80 *cpu, Z80Word address, Z80Byte value);
+
+
+/* Interfaces needed to handle ports (IN/OUT commands)
+*/
+typedef	Z80Byte	(*Z80ReadPort)(Z80 *cpu, Z80Word address);
+typedef	void	(*Z80WritePort)(Z80 *cpu, Z80Word address, Z80Byte value);
+
+
+/* Callback.  Callback should return TRUE for processing to continue.
+*/
+typedef int	(*Z80Callback)(Z80 *cpu, Z80Val data);
+
+
+/* Callback reasons
+
+   eZ80_Instruction	Called before the initial fetch for an instruction
+   			(called just to once no matter how many bytes the
+			instruction is made up of).
+
+   eZ80_EDHook		Called when an undefined ED opcode is executed.
+
+   eZ80_Halt		Called when the HALT instruction is hit and released.
+
+   eZ80_RETI		Called when the RETI instruction is executed
+*/
+typedef enum
+{
+    eZ80_Instruction,	/* data = no cycles since reset                       */
+    eZ80_EDHook,	/* data = byte after ED opcode (only for NOP opcodes) */
+    eZ80_Halt,		/* data = 1 halt raised, 0 halt cleared by int        */
+    eZ80_RETI,		/* data = ignored                                     */
+    eZ80_NO_CALLBACK	/* leave at end                                       */
+} Z80CallbackReason;
+
+
+/* Flags in the F register
+*/
+typedef enum
+{
+    eZ80_Carry		=0x01,
+    eZ80_Neg		=0x02,
+    eZ80_PV		=0x04,
+    eZ80_Hidden3	=0x08,
+    eZ80_HalfCarry	=0x10,
+    eZ80_Hidden5	=0x20,
+    eZ80_Zero		=0x40,
+    eZ80_Sign		=0x80
+} Z80FlagRegister;
+
+
+/* Disassembly label -- only useful if ENABLE_DISASSEMBLER is set.
+   Labels are stored as an array, where a NULL in the label field marks
+   the end of the list.
+*/
+typedef struct
+{
+    Z80Word	address;
+    const char	*label;
+} Z80Label;
+
+
+/* ---------------------------------------- INTERFACES
+*/
+
+
+/* Initialises the processor.  
+*/
+#ifdef ENABLE_ARRAY_MEMORY
+Z80	*Z80Init(Z80ReadPort read_port,
+		 Z80WritePort write_port);
+#else
+Z80	*Z80Init(Z80ReadMemory read_memory,
+		 Z80WriteMemory write_memory,
+		 Z80ReadPort read_port,
+		 Z80WritePort write_port,
+		 Z80ReadMemory read_for_disassem);
+#endif
+
+
+/* Resets the processor.
+*/
+void	Z80Reset(Z80 *cpu);
+
+
+/* Lodge a callback to be invoked after special events.  Returns FALSE
+   if the callback couldn't be lodged (there is a max of 10 callbacks per
+   reason).
+*/
+int	Z80LodgeCallback(Z80 *cpu,
+			 Z80CallbackReason reason,
+			 Z80Callback callback);
+
+
+/* Remove a callback.  Does nothing if reason was not lodged with
+   Z80LodgeCallback()
+*/
+void	Z80RemoveCallback(Z80 *cpu,
+			  Z80CallbackReason reason,
+			  Z80Callback callback);
+
+
+/* Cause an interrupt before the next opcode.
+   devbyte is the byte generated by the device (if any).
+*/
+void	Z80Interrupt(Z80 *cpu, Z80Byte devbyte);
+
+
+/* Cause an NMI
+*/
+void	Z80NMI(Z80 *cpu);
+
+
+/* Execute a single instruction.  Returns FALSE if any callback returned
+   FALSE.
+*/
+int	Z80SingleStep(Z80 *cpu);
+
+
+/* Executes until a callback returns FALSE (never returns otherwise)
+*/
+void	Z80Exec(Z80 *cpu);
+
+
+/* Manipulate the cylce count of the Z80
+*/
+Z80Val	Z80Cycles(Z80 *cpu);
+void	Z80ResetCycles(Z80 *cpu, Z80Val cycles);
+
+
+/* Set address to label mappings for the disassembler
+*/
+void	Z80SetLabels(Z80Label labels[]);
+
+
+/* Simple disassembly of memory accessed through read_for_disassem, or 
+   Z80_MEMORY as appropriate.  addr is updated on exit.
+*/
+const char *Z80Disassemble(Z80 *cpu, Z80Word *addr);
+
+/* Allows the CPU state to be saved/loaded from a stream
+*/
+void	Z80SaveSnapshot(Z80 *cpu, FILE *fp);
+void	Z80LoadSnapshot(Z80 *cpu, FILE *fp);
+
+#endif
+
+/* END OF FILE */

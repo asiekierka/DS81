@@ -1,0 +1,7 @@
+build
+*.arm9
+*.arm7
+*.ds.gba
+*.elf
+*.nds
+*.p

@@ -1,0 +1,322 @@
+                                      DS81
+                ---------==============================---------
+
+                           Copyright 2006 Ian Cowburn
+                              ianc@noddybox.co.uk
+
+
+1. LICENSE
+----------
+
+    The code to DS81 is released under the GNU General Public License.  See
+    the text file COPYING for details.
+
+    Other included software is provided in good faith, is not released under
+    the GNU General Public License, and is copyright their respective authors.
+    If any of these authors disagree with the distribution of their work then
+    contact me and it will be gladly removed.
+
+        ZX81 BASIC ROM (c) 1981 Nine Tiles Networks LTD
+        3D Monster Maze (c) 1983 Malcolm E. Evans
+        Mazogs, City Patrol and Sabotage (c) 1981, 1982 Don Priestley
+
+
+2. ZX81
+-------
+
+    The ZX81 was an 8-bit computer released by Sinclair Research in 1981, using
+    the Z80 CPU.
+    
+    It was a monochrome machine with no sound (be quiet those at the back of
+    the room who used to be able to do sound by doing odd things with the video
+    signal) and a text mode that could be used to plot graphics at a resolution
+    of 64 by 44 (hmmm, smaller than most icons nowadays).
+
+    It came with 1K of RAM, though most people opted for a massive 16K RAM pack.
+
+
+2. DS81
+-------
+
+    DS81 is an emulation of the 16K ZX81 and is is supplied in two main forms,
+    as a native Nintendo DS executable and a version with a Gameboy Advance
+    wrapper (in case your Ninentdo DS homebrew device only supports running
+    GBA executables).
+    
+    In addition to this two different versions are supplied, one which
+    initialises the FAT library and one which doesn't.  They are identical save
+    for this, and separate ones are supplied in case the FAT library
+    initialisation causes problem on your homebrew device:
+
+        ds81.nds          - Nintendo DS version
+        ds81.ds.gba       - As above with a GBA wrapper.
+
+        ds81-nofat.nds    - Nintendo DS version; no FAT library initialisation.
+        ds81-nofat.ds.gba - As above with a GBA wrapper.
+
+    I'm probably being overly paranoid there, but better safe than sorry.
+
+    In any of the following sections where files are mentioned it obviously
+    doesn't apply to the 'nofat' versions.
+
+
+3. Using DS81
+-------------
+
+    When run DS81 displays a splash screen with copyright information and
+    whether the FAT library has been able to find a supported device for the
+    loading of external tapes.
+
+    Once the A button has been pressed the ZX81 resets and displays itself
+    on the top screen, and a soft keyboard is displayed on the bottom, touch
+    sensitive, DS screen.
+
+    Also at this point, if so configured, a default memory snap will be loaded.
+    See the "Memory Snapshots" section for more details.
+    
+    If you've never used a ZX81 before then you may wish to find out how the
+    keyboard works -- it uses a keyword entry system, rather than the straight
+    typing if commands.  So, for instance, the key P is pressed to enter PRINT
+    when the cursor is in keyword mode (the cursor in an inverted K).
+
+    Trust me; you were glad of it when using the original ZX81's hard plastic
+    membrane keyboard.
+
+    When using the soft keyboard by default the shift key is 'sticky' and once
+    used will stay held down until pressed again.
+
+    The World of Spectrum has the original ZX81 manuals, either as a PDF
+    or in HTML form:
+
+        http://www.worldofspectrum.org/
+
+    At the bottom of the keyboard is an area where you can click to bring up a
+    menu.  Either use the stylus, or the joypad and button A to select an
+    option from the following choices:
+
+        RESET ZX81     
+            This resets the emulated ZX81.
+
+        SELECT TAPE     
+            Selects the built-in tape to use (DS81 has a number of ZX81 tapes
+            built into it).  The next section has extra information on the
+            loading of games.
+
+        CONFIGURE
+            Lets you configure settings (see last section for settings).
+            
+            If you press SELECT to exit the configuration screen then the
+            configuration is saved into the file /DS81.CFG which is read on
+            start-up.
+
+        MAP JOYPAD TO KEYS
+            Allows you to redefine the DS's joypad and buttons to ZX81 keys.
+            Follow the on-screen instructions.
+
+        MACHINE CODE MONITOR
+            Provides access to a basic machine code/memory monitor.  This lets 
+            you watch the ZX81 execute op-codes, or single-step over them.
+
+            Unless you're actually interested in such things you'll never need
+            to go near this option -- it's there to track down emulation bugs
+            as much as anything.
+
+            See the second to last section for more details.
+
+        SAVE MEMORY SNAPSHOT
+            Saves a memory snapshot.  This option only works if a FAT-enabled
+            version of DS81 is being used.  See the "Memory Snapshot" section
+            for more details.
+
+        LOAD MEMORY SNAPSHOT
+            Loads a memory snapshot.  This option only works if a FAT-enabled
+            version of DS81 is being used.  See the "Memory Snapshot" section
+            for more details.
+
+        SAVE JOYPAD/KEY STATE
+            Saves a snapshot that just contains the current state of the
+            keyboard and the joypad mappings.  This just allows you to save
+            a complex controller mapping to share between different games.
+
+        LOAD JOYPAD/KEY STATE
+            This loads the state of the keyboard and the joypad mappings
+            from a selected file.
+
+        CANCEL
+            Cancels the menu.
+
+
+
+4. Using the internal tapes on DS81
+-----------------------------------
+
+    Games on the ZX81 were supplied on cassette.  DS81 includes a few tape
+    files that are selectable from the menu.  Follow the on-screen instructions
+    to select the game.  A quick description and the controls to use are
+    displayed on the top screen.
+
+    Once you've selected a tape you can load it in the emulator by using the
+    command LOAD "".  If you're really stuck with the ZX81 keyboard:
+
+        1. Select your tape.
+        2. Reset the ZX81 from the menu.
+        3. When the inverse K cursor is displayed press the J key to generate
+           the keyword LOAD.
+        4. Press the SHIFT key.
+        5. Press the P key twice to enter the double quotes (DON'T use the
+           double quotes got by pressing SHIFT+Q.  These are not the same!)
+        6. Release the SHIFT key and press the NEW LINE key.
+        7. The tape will load and run.
+
+
+5. Using external tapes on DS81
+-------------------------------
+
+    If you are using the version of DS81 that allows the use of FAT devices,
+    and you device is supported, they you can load any old tape.
+
+    FAT support is via the new DLDI interface, so you may need to dynamically
+    link in the appropriate FAT driver.  Details are available here:
+
+        http://chishm.drunkencoders.com/DLDI/index.html
+
+    Note that the default driver linked in is the Datel Max Media Dock
+    (Compact Flash) -- solely as that's what I have.
+
+    Simply place the .P file (ZX81 games are usually distributed as .P files
+    that are simply an image of the memory that would have been dumped to tape)
+    and either put it in the root directory of the FAT device or in a directory
+    called ZX81SNAP.
+
+    Alternatively if you can't remember the names of files, loading "*" will
+    give you with a file selector to select the tape file with.
+
+    It can't be at all guaranteed that all original ZX81 games will work as
+    expected.  After all, DS81 isn't really a ZX81.
+
+
+6. High Resolution Support
+--------------------------
+
+    There is now some support for high-resolution ZX81 games.  Currently
+    it doesn't run quite full speed, and it won't work if the routines are
+    too clever - unfortunately, like Manic Miner where it switches between
+    high and low-resolution in the same frame.
+
+    I know the Software Farms games seem to work, though "Forty Niner"
+    sometimes goes mad (just incrementing the score) though that's probably
+    a general emulation bug.  Of course unless it did that anyway -- I've never
+    played it before.
+    
+    Steven McDonald's games seem to cause no-problem so far.
+
+    If a game doesn't look right it may also be worth enabling the 'RAM AT 8192'
+    option.
+
+    If you know of a game that seems to cause it real trouble, please let me
+    know -- the high-resolution support is still a bit of a hack whereby the
+    emulator searches memory for the display file on detecting that the 'I'
+    register has changed.
+
+
+7. Machine Code Monitor
+-----------------------
+
+    On starting the machine code monitor the keyboard will go dim and get
+    overlaid with a text display showing you the Z80 instructions about to be
+    executed along with the current states of the registers in the Z80.
+
+    The keyboard is dim, but still on display as the montitor does let you
+    use the keyboard.  Note that all keys are sticky (like the shift key in its
+    default state) and that joypad mappings are ignored.
+
+    With the monitor on display the following joypad keys can be used:
+
+    START       - Toggles between running continuously and single-step mode.
+
+    A           - If in single-step mode then executes the next instruction.
+
+    X           - Display a help page.
+
+    SELECT      - Toggles between the current disassembly/CPU state display,
+                  a disassembly or a hex-dump of memory.
+
+    L/R         - The shoulder buttons change the address being displayed on
+                  the memory dump.  Hold the Y key at the same time to make
+                  it jump in bigger steps.
+
+    B           - Cycles the value used for the memory dump or assembly views;
+                  either the address as set with the shoulder buttons, or one
+                  of the registers: HL, IX, SP, IY, BC, DE or PC.
+
+    Press the config bar at the bottom of the soft keyboard to exit the
+    machine code monitor and return to normal running.
+
+
+8. Configuration Options
+------------------------
+
+    STICKY SHIFT
+
+        This option allows you to decide whether the shift key on the soft
+        keyboard is sticky (toggles when you press it) or acts like the other
+        keys.  You should never need to make it non-sticky unless a game needs
+        it.
+
+    AVERAGE TOUCHSCREEN
+
+        This option can be enabled if your touch-screen seems to suffer from
+        jumps (mine seems to once in a while) and causes the soft keyboard to
+        only register touchscreen presses if they are within 5 pixels of each
+        other over two frames.  Your mileage my vary, but for me it stops the
+        menu randomly appearing.
+
+        This means that response can be reduced by a frame, but it shouldn't
+        cause problems.
+
+    RAM AT 8192
+
+        One hardware fix that could be made to the ZX81 was to replace the
+        mirror of the ROM that started at 8192 with RAM.  This allowed
+        true high resolution graphics.
+        
+        Not that I've found any that work yet :-)
+
+    ALLOW TAPE SAVE
+
+        If enabled this means that files saved with the SAVE command will
+        try and create a .P file in the ZX81SNAP directory, or the root
+        directory.  You can SAVE "*" to bring up the file selector.
+
+        If not enabled attempts to SAVE files from BASIC will be silently
+        ignored.
+
+    LOAD DEFAULT MEMORY SNAP
+
+        If enabled DS81 will look for a memory snapshot called AUTO.D81 in 
+        either the root directory or the ZX81SNAP directory.
+        
+        See the "Memory Snapshot" section for more details on snapshots.
+
+
+9. Memory Snapshots
+-------------------
+
+    Since version 1.3 DS81 now supports basic memory snapshots.  When you
+    select the "SAVE MEMORY SNAPSHOT" from the main menu DS81 will prompt
+    for a filename (only up to 8 alphabetical characters).  Once entered
+    the snapshot will be saved in the directory ZX81SNAP with an automatically
+    added .D81 extension.  If this save fails, an attempt is made to save the
+    snapshot in the root directory of the device.
+
+    On selecting to load a memory snapshot a file selector is displayed.  On
+    selecting one of the snapshots it will be instantly loaded.
+
+    Note that along with the machine's state the currently configured keypad
+    mappings are saved in the snapshot and restored when loaded.
+
+
+-------------------------------------------------------------------------------
+$Id: instructions.txt,v 1.9 2008-12-12 00:19:07 ianc Exp $
+
+ vim:expandtab:spell

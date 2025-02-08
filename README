@@ -1,0 +1,13 @@
+				      DS81
+			   Copyright 2006 Ian Cowburn
+			      ianc@noddybox.co.uk
+
+The code to DS81 is released under the GNU General Public License.  See COPYING
+for details.
+
+The ZX81 BASIC ROM has been provided under the GNU GPL v2 as part of the Open81
+release. Copyright (c) 1981 Nine Tiles Networks LTD
+
+See the file INSTRUCTIONS.TXT for instructions on use.
+See the file BUILDING for instructions on building the sources.
+See the file CHANGES for recent changes.

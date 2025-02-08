@@ -1,0 +1,55 @@
++ Completed
+* In progress
+- Abandoned.
+
+Changes from V1.0 to V1.1
+
+    +	Added external FAT file loading.
+    +	Added Mazogs as a built-in tape (code courtesy of Paul Fearnley)
+    +	Fixed bug where the ROM input routine could be easily locked up.
+    	This was caused by a problem in the way I set up the LASTK system
+	variables from the house-keeping routine.
+
+
+Changes from V1.1 to V1.1a (uncontrolled release).
+
+    +	Fixed hideous mess up that was the keyboard fix.
+
+Changes from V1.1a to V1.2
+
+    +	Controlled version of keyboard fix.
+    -	Added seperate ARM7/ARM9 code so I could use Wifi to use a web server
+        as a file store.  Wifi lib doesn't work with my access point, so
+	reverted to a simpler ARM9 build.  Which has made a merry mess of the
+	CVS repository.
+    +	Compiled with newer version of libfat so that the DLDI interfaces can
+    	be used (thanks Chism!)  At last I can load ZX81 programs into my own
+	damned emulator!  Moved to R20 of the toolchain and the new libnds.
+    +	Added support for text mode underlayed with a rotation screen for bitmap
+    	purposes.
+    +	Added code to ZX81 emulation to notice changes to I register and search
+    	for hires display files.  Works for a lot of hires games, though needs
+	proper display emulation for Manic Miner, so that won't work :-(
+    +	Improved speed of hi-res code.
+    +	Fixed attempted load in ZX81SNAP -- the FAT libs seem to want UNIX style
+    	directory seperators.
+    +	Added file selector with LOAD "*"
+    +	Handling of 1K display files is a bit better.
+    +	Added option for RAM in place of ROM mirror.
+    +	Changed lower screen to 8-bit deep so I can overlay a tiled mode.
+    +	Added lower screen console routines.
+    +	Added Machine Code Monitor.
+
+Changes from V1.2 to V1.2a
+
+    +	Made file selector filter case-insensitive.
+
+Changes from V1.2a to V1.3
+
+    +	Added memory snapshots.
+    +	Added auto-load of AUTO snapshot.
+    +	Added save/load of keyboard mappings.
+    +	Added ability to SAVE from BASIC.
+    +	Increased maximum number of files to 1024 in selector.
+    *	Forty Niner still goes mental, so there's still an emulation bug
+    	somewhere.
