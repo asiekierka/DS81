@@ -11,12 +11,7 @@
     The code to DS81 is released under the GNU General Public License.  See
     the text file COPYING for details.
 
-    Other included software is provided in good faith, is not released under
-    the GNU General Public License, and is copyright their respective authors.
-    If any of these authors disagree with the distribution of their work then
-    contact me and it will be gladly removed.
-
-        ZX81 BASIC ROM (c) 1981 Nine Tiles Networks LTD
+        Open81 BASIC ROM (c) 1981 Nine Tiles Networks LTD
         3D Monster Maze (c) 1983 Malcolm E. Evans
         Mazogs, City Patrol and Sabotage (c) 1981, 1982 Don Priestley
 
@@ -33,31 +28,6 @@
     of 64 by 44 (hmmm, smaller than most icons nowadays).
 
     It came with 1K of RAM, though most people opted for a massive 16K RAM pack.
-
-
-2. DS81
--------
-
-    DS81 is an emulation of the 16K ZX81 and is is supplied in two main forms,
-    as a native Nintendo DS executable and a version with a Gameboy Advance
-    wrapper (in case your Ninentdo DS homebrew device only supports running
-    GBA executables).
-    
-    In addition to this two different versions are supplied, one which
-    initialises the FAT library and one which doesn't.  They are identical save
-    for this, and separate ones are supplied in case the FAT library
-    initialisation causes problem on your homebrew device:
-
-        ds81.nds          - Nintendo DS version
-        ds81.ds.gba       - As above with a GBA wrapper.
-
-        ds81-nofat.nds    - Nintendo DS version; no FAT library initialisation.
-        ds81-nofat.ds.gba - As above with a GBA wrapper.
-
-    I'm probably being overly paranoid there, but better safe than sorry.
-
-    In any of the following sections where files are mentioned it obviously
-    doesn't apply to the 'nofat' versions.
 
 
 3. Using DS81

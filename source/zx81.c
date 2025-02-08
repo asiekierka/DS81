@@ -35,7 +35,7 @@
 
 #include "config.h"
 
-#include "zx81_bin.h"
+#include "open81_bin.h"
 
 #include "ds81_debug.h"
 
@@ -870,7 +870,7 @@ void ZX81Init(uint16 *text_vram, uint16* bitmap_vram, Z80 *z80)
 
     /* Load the ROM
     */
-    memcpy(mem,zx81_bin,ROMLEN);
+    memcpy(mem,open81_bin,ROMLEN);
 
     /* Patch the ROM
     */

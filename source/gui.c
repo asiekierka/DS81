@@ -25,7 +25,8 @@
 #include <string.h>
 #include <nds.h>
 
-#include <sys/dir.h>
+#include <dirent.h>
+#include <sys/stat.h>
 
 #include "framebuffer.h"
 #include "zx81.h"
@@ -35,7 +36,7 @@
 
 /* ---------------------------------------- PRIVATE INTERFACES - PATH HANDLING
 */
-#define FSEL_FILENAME_LEN	20
+#define FSEL_FILENAME_LEN	MAXNAMLEN
 #define FSEL_LINES		16
 #define FSEL_MAX_FILES		1024
 
@@ -45,8 +46,7 @@
 typedef struct
 {
     char	name[FSEL_FILENAME_LEN+1];
-    int		is_dir;
-    int		size;
+    bool	is_dir;
 } FSEL_File;
 
 static FSEL_File fsel[FSEL_MAX_FILES];
@@ -156,25 +156,23 @@ static int ValidFilename(const char *name, int is_dir, const char *filter)
 
 static int LoadDir(const char *path, const char *filter)
 {
-    DIR_ITER *dir;
-    struct stat st; 
-    char name[FILENAME_MAX];
+    DIR *dir;
+    struct dirent *dt;
     int no = 0;
 
-    if ((dir = diropen(path)))
+    if ((dir = opendir(path)))
     {
-    	while(no < FSEL_MAX_FILES && dirnext(dir,name,&st) == 0)
+    	while(no < FSEL_MAX_FILES && (dt = readdir(dir)))
 	{
-	    if (ValidFilename(name, (st.st_mode & S_IFDIR), filter))
+	    if (ValidFilename(dt->d_name, (dt->d_type == DT_DIR), filter))
 	    {
-		strcpy(fsel[no].name,name);
-		fsel[no].is_dir = (st.st_mode & S_IFDIR);
-		fsel[no].size = (int)st.st_size;
+		strcpy(fsel[no].name,dt->d_name);
+		fsel[no].is_dir = (dt->d_type == DT_DIR);
 		no++;
 	    }
 	}
 
-	dirclose(dir);
+	closedir(dir);
 
 	qsort(fsel,no,sizeof fsel[0],SortFiles);
     }
@@ -259,7 +257,8 @@ int GUI_Menu(const char *opts[])
 	    }
 	    else if (key & KEY_TOUCH)
 	    {
-		touchPosition tp=touchReadXY();
+		touchPosition tp;
+		touchRead(&tp);
 
 		if (tp.px>=x && tp.px<(w+w) && tp.py>=y && tp.py<(y+h))
 		{
@@ -421,7 +420,8 @@ void GUI_Config(void)
 	}
 	else if (key & KEY_TOUCH)
 	{
-	    touchPosition tp = touchReadXY();
+	    touchPosition tp;
+	    touchRead(&tp);
 	    int nsel;
 
 	    nsel = (tp.py-18)/14;
@@ -532,7 +532,7 @@ int GUI_FileSelect(char pwd[], char selected_file[], const char *filter)
 
 	    while (((key=keysHeld()) & KEY_TOUCH) && diff == 0)
 	    {
-		tp = touchReadXY();
+		touchRead(&tp);
 		diff = tp.py - drag_start;
 		swiWaitForVBlank();
 	    }
@@ -578,8 +578,7 @@ int GUI_FileSelect(char pwd[], char selected_file[], const char *filter)
 	    if (key & KEY_TOUCH)
 	    {
 		touchPosition tp;
-
-		tp = touchReadXY();
+		touchRead(&tp);
 
 	    	if (tp.py >= FSEL_LIST_Y && tp.py <= (FSEL_LIST_Y+FSEL_LIST_H))
 		{

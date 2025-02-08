@@ -27,14 +27,14 @@
 #include "keyboard.h"
 #include "zx81.h"
 
-#include "maze_bin.h"
+/* #include "maze_bin.h"
 #include "maze_inlay_bin.h"
 #include "cpatrol_bin.h"
 #include "cpatrol_inlay_bin.h"
 #include "sabotage_bin.h"
 #include "sabotage_inlay_bin.h"
 #include "mazogs_bin.h"
-#include "mazogs_inlay_bin.h"
+#include "mazogs_inlay_bin.h" */
 
 #include "ds81_debug.h"
 
@@ -51,9 +51,12 @@ typedef struct
     const char	*text;
 } Tape;
 
-#define NO_TAPES	4
+#define NO_TAPES	0
 
-static SoftKey	maze_keys[]=
+static Tape	tapes[NO_TAPES]=
+                    {};
+
+/* static SoftKey	maze_keys[]=
 		    {
 		    	SK_PAD_UP,	SK_7,
 		    	SK_PAD_LEFT,	SK_5,
@@ -184,7 +187,7 @@ static Tape	tapes[NO_TAPES]=
 			"to play as the guard, %R% as\n"
 			"the saboteur."
 		    }
-		};
+		}; */
 
 
 static int	current=0;

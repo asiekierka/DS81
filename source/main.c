@@ -24,6 +24,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <nds.h>
+#include <nds/registers_alt.h>
 #include <fat.h>
 
 #include "framebuffer.h"
@@ -96,7 +97,7 @@ static void Splash(void)
     static char scroller[]=
     {
     	"                   "
-	"Welcome to DS81, a ZX81 emulator for the Ninetendo DS.  "
+	"Welcome to DS81, a ZX81 emulator for the Nintendo DS.  "
 	"You can safely ignore this message.  I was just bored for half an "
 	"hour.  And no retro game is complete without a side-scroller...  "
 	"Thanks to Slay Radio, Ladytron, the Genki Rockets, the High "
@@ -107,7 +108,7 @@ static void Splash(void)
     {
     	"DS81 \177 2006 Ian C",
 	" ",
-	"ZX81 ROM \177 1981",
+	"Open81 ROM \177 1981",
 	"Nine Tiles Networks LTD",
 	" ",
 	"PRESS A TO CONTINUE",
@@ -298,7 +299,7 @@ int main(int argc, char *argv[])
 {
     Z80 *z80;
 
-    powerON(POWER_ALL_2D);
+    powerOn(POWER_ALL_2D);
 
     /* Set up main screen for ZX81 and load the ROM character data
     */
@@ -362,7 +363,6 @@ int main(int argc, char *argv[])
 
     /* Set up interrupts and timers 
     */
-    irqInit();
     irqSet(IRQ_VBLANK,VBlankFunc);
     irqEnable(IRQ_VBLANK);
 

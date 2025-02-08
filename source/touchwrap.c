@@ -35,7 +35,7 @@ int AllowTouch(touchPosition *tp)
     int16 dy;
     int res;
 
-    *tp = touchReadXY();
+    touchRead(tp);
 
     if (DS81_Config[DS81_AVERAGE_TOUCHSCREEN])
     {
